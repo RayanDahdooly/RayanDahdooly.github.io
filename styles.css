@@ -1,0 +1,718 @@
+/* ==========================================================
+   Rayan Dahdooly — portfolio
+   Colors, fonts, rings and ruled lines are copied from the Meno
+   app (BookView, HomeView GridBackground, ProfileView).
+   ========================================================== */
+
+@font-face { font-family: "Caveat"; src: url("assets/fonts/Caveat-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Caveat"; src: url("assets/fonts/Caveat-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root {
+  --cream: #F5EFE2;          /* app background */
+  --paper: #FBF8F1;          /* notebook page, a touch lighter than the desk */
+  --ink: #2A2418;            /* BookView text */
+  --ink-soft: #4A4034;
+  --muted: #76685A;          /* labels; darkened from #8A7A6A for contrast */
+  --stamp: #8F806F;
+  --accent: #C4694F;         /* BookView terracotta */
+  --accent-deep: #A44E35;
+  --line: rgba(138, 122, 106, 0.16);
+  --white-card: #FFFDF8;
+
+  --mint: #D9ECDF;
+  --lavender: #DCDDF0;
+  --blue: #D8E3EE;
+  --peach: #F6E1D4;
+
+  --display: "Caveat", "Bradley Hand", cursive;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --body: var(--mono);
+
+  --page-pad: clamp(20px, 5vw, 48px);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 72px; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.7;
+  /* HomeView graph paper: sage lines every 20pt, a + on every third crossing */
+  background-color: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg stroke='%237A9466' stroke-opacity='.18' stroke-width='.5'%3E%3Cpath d='M10 0V60M30 0V60M50 0V60M0 10H60M0 30H60M0 50H60'/%3E%3C/g%3E%3Cpath d='M28 30h4M30 28v4' stroke='%238A9A7A' stroke-opacity='.55' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+}
+
+img { max-width: 100%; display: block; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3 { margin: 0; font-weight: 700; }
+
+.skip {
+  position: absolute; left: -999px; top: 8px;
+  background: var(--ink); color: var(--cream); padding: 8px 12px; border-radius: 8px; z-index: 20;
+}
+.skip:focus { left: 8px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: rgba(245, 239, 226, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(196, 105, 79, 0.35);
+}
+.topbar-inner {
+  max-width: 880px; margin: 0 auto;
+  display: flex; align-items: center; gap: 18px;
+  padding: 10px 16px;
+}
+.brand {
+  font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1;
+  color: var(--ink); text-decoration: none; flex: none;
+}
+.tabs {
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+  margin-left: auto; min-width: 0; scroll-padding-inline: 16px;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent);
+          mask-image: linear-gradient(to right, #000 calc(100% - 22px), transparent);
+  padding-right: 18px;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a {
+  display: block; white-space: nowrap;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  padding: 7px 10px; border-radius: 999px; border: 1px solid transparent;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-current] { color: var(--accent-deep); border-color: rgba(196, 105, 79, 0.5); background: rgba(196, 105, 79, 0.06); }
+
+/* ---------- the notebook ---------- */
+.book {
+  max-width: 880px; margin: 0 auto;
+  padding: 44px 16px 24px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 64px;
+}
+
+.page {
+  position: relative;
+  padding: 40px var(--page-pad) 26px;
+  border-radius: 16px;
+  /* BookView: ruled lines in #8A7A6A, faint edge vignette */
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 31px, var(--line) 31px 32px);
+  background-position: 0 14px;
+  border: 1.5px solid rgba(42, 36, 24, 0.18);
+  box-shadow:
+    inset 18px 0 18px -18px rgba(0, 0, 0, 0.08),
+    inset -18px 0 18px -18px rgba(0, 0, 0, 0.08),
+    /* page-stack slivers peeking under the bottom edge */
+    0 5px 0 -1.5px #F3ECDD, 0 5px 0 0 rgba(42, 36, 24, 0.10),
+    0 10px 0 -3px #EFE7D6, 0 10px 0 -1.5px rgba(42, 36, 24, 0.07),
+    0 18px 36px -6px rgba(60, 40, 20, 0.18);
+}
+
+/* Spiral coil across the top edge, same capsules as BookView */
+.page::before, .book-mode .book::before {
+  content: "";
+  position: absolute; left: 18px; right: 18px; top: -9px; height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%232C2417'/%3E%3Cstop offset='.5' stop-color='%235A4632'/%3E%3Cstop offset='1' stop-color='%232C2417'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='7' y='2' width='10' height='15' rx='5' fill='%23000' opacity='.2'/%3E%3Crect x='7' y='1' width='10' height='15' rx='5' fill='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: space no-repeat;
+  background-size: 24px 18px;
+  pointer-events: none;
+}
+
+.page-head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 12px 20px;
+}
+.head-text { flex: 1 1 300px; min-width: 0; }
+
+.stamp, .label, .page-no, .level-tag, .tags li, .date, .contact-sub {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+.stamp { font-size: 12px; color: var(--stamp); margin-bottom: 4px; }
+
+.title {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(42px, 7vw, 60px); line-height: 1.02;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.title-name { font-size: clamp(50px, 10vw, 76px); }
+
+.pill {
+  display: inline-block; margin-top: 12px;
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent-deep);
+  border: 1.5px solid rgba(196, 105, 79, 0.6); border-radius: 999px;
+  padding: 5px 14px;
+  background: rgba(196, 105, 79, 0.05);
+}
+
+.rule { border: 0; height: 1.5px; background: var(--accent); margin: 14px 0 26px; }
+
+.page-no {
+  margin-top: 30px; text-align: right;
+  font-size: 11px; color: var(--stamp); letter-spacing: 0.2em;
+}
+
+.label {
+  font-size: 12px; color: var(--muted); margin-bottom: 14px;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(196, 105, 79, 0.55);
+}
+
+/* ---------- mascot + speech bubble ---------- */
+.buddy {
+  flex: 0 1 auto; margin-left: auto;
+  display: flex; align-items: flex-end; gap: 6px;
+}
+.buddy img { height: 92px; width: auto; transform-origin: 50% 100%; transition: transform .3s ease; }
+.buddy:hover img { transform: rotate(-4deg) translateY(-3px); }
+@media (prefers-reduced-motion: reduce) { .buddy:hover img { transform: none; } }
+
+.bubble {
+  position: relative; margin-bottom: 52px;
+  font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 1.1;
+  color: var(--ink);
+  background: var(--white-card);
+  border: 1.5px solid rgba(196, 105, 79, 0.55);
+  border-radius: 14px;
+  padding: 7px 13px 8px;
+  max-width: 250px;
+  box-shadow: 0 2px 0 rgba(60, 40, 20, 0.06);
+}
+.bubble::after {
+  content: ""; position: absolute; right: -7px; bottom: 10px;
+  width: 11px; height: 11px; background: var(--white-card);
+  border-right: 1.5px solid rgba(196, 105, 79, 0.55);
+  border-bottom: 1.5px solid rgba(196, 105, 79, 0.55);
+  transform: rotate(-45deg);
+}
+
+/* ---------- links ---------- */
+a.lk {
+  color: inherit; text-decoration: underline;
+  text-decoration-color: rgba(196, 105, 79, 0.55);
+  text-decoration-thickness: 1.5px; text-underline-offset: 0.2em;
+  transition: color .15s ease, text-decoration-color .15s ease;
+}
+a.lk::after {
+  content: ""; display: inline-block; width: 0.62em; height: 0.62em; margin-left: 0.28em;
+  vertical-align: 0.08em;
+  background: currentColor; opacity: 0.55;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 8 8 2M3.5 2H8v4.5' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 8 8 2M3.5 2H8v4.5' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+a.lk:hover { color: var(--accent-deep); text-decoration-color: var(--accent-deep); }
+a.lk:hover::after { opacity: 1; }
+
+/* ---------- page 1 ---------- */
+.lede { font-size: 16px; line-height: 1.8; color: var(--ink-soft); max-width: 62ch; }
+
+/* ---------- page 2: note cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.card {
+  border-radius: 16px; padding: 20px 22px 18px;
+  border: 1px solid rgba(42, 36, 24, 0.07);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 6px 16px -8px rgba(60, 40, 20, 0.25);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.tint-mint { background: var(--mint); }
+.tint-lavender { background: var(--lavender); }
+.card-title {
+  font-family: var(--display); font-size: 34px; line-height: 1;
+  padding-bottom: 8px; position: relative;
+}
+.card-title::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 34px; height: 2px;
+  background: var(--accent); border-radius: 2px;
+}
+.card p { color: var(--ink-soft); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
+.tags li {
+  font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em; color: var(--ink-soft);
+  background: rgba(255, 253, 248, 0.7);
+  border: 1px solid rgba(42, 36, 24, 0.12); border-radius: 999px; padding: 3px 10px;
+}
+
+/* ---------- page 3: notes inside a day (BookView DayNotesView) ---------- */
+.notes-head { display: flex; justify-content: space-between; align-items: baseline; margin-top: -8px; }
+.notes-label, .notes-num {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.notes-num { color: var(--stamp); letter-spacing: 0; }
+.notes-rule { display: block; width: 32px; height: 1.5px; background: var(--accent); margin: 6px 0 14px; }
+.notes { display: grid; gap: 10px; }
+
+.note {
+  --bar: color-mix(in srgb, var(--note) 62%, #5A4632);
+  border-radius: 12px; overflow: hidden;
+  background: color-mix(in srgb, var(--note) 48%, transparent);
+  box-shadow: inset 4px 0 0 var(--bar);
+  transition: background-color .18s ease;
+}
+.note:hover { background: color-mix(in srgb, var(--note) 70%, transparent); }
+.note[open] { background: color-mix(in srgb, var(--note) 62%, transparent); }
+
+.note summary {
+  display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0 12px;
+  padding: 12px 18px 12px 22px; cursor: pointer; list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.note summary::-webkit-details-marker { display: none; }
+.note summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+.note-title { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.15; color: rgba(42, 36, 24, 0.85); }
+.note-count { font-family: var(--mono); font-size: 11px; color: #A09080; white-space: nowrap; }
+.note-preview {
+  grid-column: 1 / -1;
+  font-family: var(--display); font-size: 19px; line-height: 1.3; color: rgba(42, 36, 24, 0.5);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.note[open] .note-preview { display: none; }
+.note-preview span + span::before { content: ", "; }
+
+/* the opened checklist: short terracotta rule, then outlined boxes with a terracotta tick */
+.note-tasks { padding: 0 18px 14px 22px; }
+.note-tasks::before { content: ""; display: block; width: 30px; height: 1.5px; background: var(--accent); margin: 2px 0 8px; }
+.note-tasks li {
+  display: flex; align-items: center; gap: 10px; padding: 3px 0;
+  font-family: var(--display); font-size: 23px; line-height: 1.3; color: var(--ink);
+}
+.tick {
+  flex: none; position: relative; width: 19px; height: 19px; border-radius: 4px;
+  border: 1.2px solid rgba(42, 36, 24, 0.4); background: rgba(255, 253, 248, 0.6);
+}
+.tick::after {
+  content: ""; position: absolute; inset: 1px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 6.5' fill='none' stroke='%23C4694F' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+.note[open] .tick::after { animation: tick-in .3s ease both; }
+.note[open] li:nth-child(2) .tick::after { animation-delay: .06s; }
+.note[open] li:nth-child(3) .tick::after { animation-delay: .12s; }
+.note[open] li:nth-child(4) .tick::after { animation-delay: .18s; }
+@keyframes tick-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* smooth open/close where the browser supports it; instant elsewhere */
+:root { interpolate-size: allow-keywords; }
+.note::details-content {
+  block-size: 0; overflow-y: clip;
+  transition: block-size .28s cubic-bezier(.2, .8, .25, 1), content-visibility .28s allow-discrete;
+}
+.note[open]::details-content { block-size: auto; }
+
+.notes-hint {
+  margin-top: 14px; text-align: center;
+  font-family: var(--display); font-size: 18px; color: rgba(42, 36, 24, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note::details-content { transition: none; }
+  .note[open] .tick::after { animation: none; }
+}
+
+/* ---------- page 4: results + streak ---------- */
+.results { display: grid; gap: 2px; margin-bottom: 30px; }
+.results li {
+  position: relative; padding: 6px 0 6px 22px; font-size: 16px; color: var(--ink);
+}
+.results li::before {
+  content: ""; position: absolute; left: 2px; top: 1.05em;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: 0.85;
+}
+
+/* stats card, after Meno's Level Journey card (CURRENT RANK | MAX RANK) */
+.cf-card {
+  display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 28px;
+  background: rgba(246, 225, 212, 0.6);
+  border: 1.5px solid rgba(232, 160, 130, 0.6); border-radius: 18px;
+  padding: 18px 0;
+}
+.cf-stat { padding: 0 22px; }
+.cf-stat + .cf-stat { border-left: 1.5px solid rgba(42, 36, 24, 0.12); }
+.cf-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.cf-num {
+  font-family: var(--mono); font-weight: 700; font-size: clamp(34px, 6vw, 44px); line-height: 1.15;
+  color: var(--accent); margin: 6px 0 2px;
+}
+.cf-stat + .cf-stat .cf-num { color: var(--ink); }
+.cf-plus { font-size: 0.7em; vertical-align: 0.25em; }
+.cf-unit { font-size: 0.42em; font-weight: 500; color: var(--ink-soft); }
+.cf-note { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+/* heatmap, laid out like the Codeforces one: Sunday-first weeks, months on top,
+   Mon / Wed / Fri down the side. Cells grow to fill the page; never below 10px. */
+.streak { container-type: inline-size; }
+.streak-body {
+  --gap: 3px; --days-col: 30px;
+  --cell: max(10px, calc((100cqw - var(--days-col) - 9px - 51 * var(--gap)) / 52));
+  display: flex; gap: 8px;
+}
+.streak-days, .streak-grid {
+  display: grid; grid-template-rows: 16px repeat(7, var(--cell)); gap: var(--gap);
+}
+.streak-days { width: var(--days-col); flex: none; }
+.streak-days span {
+  font-family: var(--mono); font-size: 10px; line-height: var(--cell); color: var(--muted); text-align: right;
+}
+.streak-window {
+  flex: 1; min-width: 0;
+  overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; padding-bottom: 6px;
+}
+.streak-grid { grid-auto-columns: var(--cell); width: max-content; }
+.streak-month {
+  grid-row: 1; font-family: var(--mono); font-size: 10px; line-height: 14px; color: var(--muted); white-space: nowrap;
+}
+.streak-grid i { display: block; border-radius: 2px; }
+.streak-legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; }
+/* the Codeforces / GitHub activity greens */
+.l0 { background: #EBEDF0; }
+.l1 { background: #9BE9A8; }
+.l2 { background: #40C463; }
+.l3 { background: #30A14E; }
+.l4 { background: #216E39; }
+.streak-legend {
+  display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--stamp);
+}
+
+/* ---------- page 5: level journey ---------- */
+.journey { display: grid; gap: 26px; }
+.level { position: relative; }
+.level-tag { font-size: 11px; color: var(--stamp); line-height: 1.2; padding-top: 2px; }
+.level-title { font-family: var(--display); font-size: 29px; line-height: 1.1; margin: 2px 0 10px; }
+.entries {
+  background: rgba(246, 225, 212, 0.55);
+  border: 1.5px solid rgba(232, 160, 130, 0.55);
+  border-radius: 14px; padding: 6px 16px;
+}
+.entries li {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 14px;
+  padding: 8px 0; color: var(--ink);
+}
+.entries li + li { border-top: 1px solid rgba(42, 36, 24, 0.07); }
+.date { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; white-space: nowrap; }
+.entries-societies li { justify-content: flex-start; }
+.chips { font-weight: 700; color: var(--accent-deep); letter-spacing: 0.06em; }
+
+/* ---------- page 6: contact ---------- */
+.contact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.contact li {
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 18px; border-radius: 14px;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  background: var(--white-card); border: 1px solid rgba(42, 36, 24, 0.08);
+  box-shadow: 0 6px 16px -10px rgba(60, 40, 20, 0.25);
+}
+.contact .lk { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1.1; white-space: nowrap; align-self: flex-start; }
+.contact span.lk { color: var(--ink-soft); }
+.contact-sub { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: none; overflow-wrap: anywhere; }
+.contact-sub:empty { display: none; }
+
+/* ---------- footer ---------- */
+.foot {
+  text-align: center; padding: 8px 16px calc(36px + env(safe-area-inset-bottom, 0px));
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stamp);
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 560px) {
+  body { font-size: 14px; }
+  .book { padding-top: 32px; gap: 52px; padding-inline: 12px; }
+  .page { padding-top: 34px; }
+  .topbar-inner { gap: 10px; padding: 8px 12px; }
+  .brand { font-size: 25px; }
+  .tabs a { padding: 6px 8px; font-size: 10.5px; letter-spacing: 0.1em; }
+  .page-head { gap: 6px 20px; }
+  .buddy img { height: 62px; }
+  .bubble { font-size: 19px; margin-bottom: 22px; max-width: none; white-space: nowrap; padding: 5px 12px 6px; }
+  .bubble::after { bottom: 8px; }
+  .lede { font-size: 15px; }
+  .results li { font-size: 15px; }
+      .level-title { font-size: 26px; }
+  .entries { padding: 4px 13px; }
+  .cf-stat { padding: 0 16px; }
+  .cf-note { font-size: 12px; }
+  .note summary { padding: 10px 14px 10px 18px; }
+  .note-title { font-size: 24px; }
+  .note-preview { font-size: 18px; }
+  .note-tasks { padding: 0 14px 12px 18px; }
+  .note-tasks li { font-size: 22px; }
+  .contact { grid-template-columns: 1fr; gap: 10px; }
+  .contact li { gap: 14px; padding: 12px 16px; }
+  .c-icon { width: 42px; height: 42px; }
+  .contact .lk { font-size: 27px; }
+  .contact-sub { font-size: 11px; letter-spacing: 0.02em; }
+}
+
+
+/* ==========================================================
+   Laptop size: one notebook, one page at a time, flipped on
+   its top edge like BookView (main.js adds .book-mode).
+   ========================================================== */
+.flip-bar { display: none; }
+
+.book-mode, .book-mode body { height: 100%; overflow: hidden; }
+.book-mode .foot, .book-mode .page-no { display: none; }
+
+.book-mode .book {
+  --bar-h: 54px;
+  position: relative; display: block;
+  width: calc(100% - 48px); max-width: 880px;
+  height: calc(100dvh - var(--topbar-h, 57px) - 66px);
+  margin: 34px auto 0; padding: 0;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1.5px solid rgba(42, 36, 24, 0.18);
+  box-shadow:
+    0 5px 0 -1.5px #F3ECDD, 0 5px 0 0 rgba(42, 36, 24, 0.10),
+    0 10px 0 -3px #EFE7D6, 0 10px 0 -1.5px rgba(42, 36, 24, 0.07),
+    0 18px 36px -6px rgba(60, 40, 20, 0.18);
+}
+/* rings stay put on the frame; the pages swing beneath them */
+.book-mode .book::before { z-index: 6; }
+
+.book-mode .page {
+  position: absolute; inset: 0 0 var(--bar-h) 0;
+  border: 0; border-radius: 15px 15px 0 0;
+  box-shadow: inset 18px 0 18px -18px rgba(0, 0, 0, 0.08), inset -18px 0 18px -18px rgba(0, 0, 0, 0.08);
+  padding-bottom: 44px;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  scrollbar-color: rgba(138, 122, 106, 0.4) transparent;
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+  visibility: hidden;
+}
+.book-mode .page::before { display: none; }
+.book-mode .page.is-current { visibility: visible; z-index: 2; }
+
+/* a long page fades out at the bottom while there is more to scroll */
+.book-mode .book::after {
+  content: ""; position: absolute; left: 2px; right: 2px; bottom: var(--bar-h); height: 56px;
+  background: linear-gradient(to bottom, rgba(251, 248, 241, 0), var(--paper));
+  pointer-events: none; z-index: 3; opacity: 0; transition: opacity .2s ease;
+}
+.book-mode .book.has-more::after { opacity: 1; }
+.book-mode .book.is-flipping::after { opacity: 0; transition: none; }
+
+/* the app's bottom bar: chevron up, PAGE n. / 6, chevron down */
+.book-mode .flip-bar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: var(--bar-h); z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  background: #F0EBE0;
+  border-top: 1px solid rgba(42, 36, 24, 0.08);
+  border-radius: 0 0 15px 15px;
+}
+.flip-btn {
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+  color: var(--accent);
+  transition: background-color .15s ease, opacity .15s ease;
+}
+.flip-btn:hover:not(:disabled) { background: rgba(196, 105, 79, 0.1); }
+.flip-btn:disabled { opacity: 0.3; cursor: default; }
+.flip-label {
+  font-family: var(--display); font-size: 19px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #6B6057;
+}
+
+/* layout groups (phone: simply stacked) */
+.contents { display: none; }
+.journey-cols { display: grid; gap: 26px; }
+
+/* ---------- laptop notebook: use the whole sheet ---------- */
+.book-mode .book { width: min(1180px, calc(100% - 64px)); max-width: none; }
+.book-mode .topbar-inner { max-width: min(1180px, calc(100% - 64px)); padding-inline: 4px; }
+
+/* header at the top of the sheet, the content centred in the space under it */
+.book-mode .page { display: flex; flex-direction: column; padding: 42px 64px 30px; }
+.book-mode .page-head, .book-mode .rule { flex: none; }
+.book-mode .page-body {
+  flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center;
+  padding-block: 4px 8px;
+}
+.book-mode .title { font-size: 62px; }
+.book-mode .rule { margin-bottom: 22px; }
+.book-mode .buddy img { height: 112px; }
+.book-mode .bubble { font-size: 23px; max-width: 300px; margin-bottom: 64px; }
+
+/* page 1: bigger name, bigger Meno, and a notebook contents index */
+.book-mode #about .title-name { font-size: 92px; }
+.book-mode #about .pill { font-size: 13px; padding: 6px 16px; }
+.book-mode #about .buddy img { height: 150px; }
+.book-mode #about .bubble { margin-bottom: 92px; }
+.book-mode .lede { font-size: 18px; line-height: 1.85; max-width: 68ch; }
+.book-mode .contents { display: block; margin-top: 36px; max-width: 700px; }
+.contents ol { display: grid; gap: 2px; }
+.contents a {
+  display: flex; align-items: baseline; gap: 12px; padding: 4px 0;
+  color: var(--ink); text-decoration: none;
+}
+.c-name { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1.2; transition: color .15s ease; }
+.contents i { flex: 1; border-bottom: 2px dotted rgba(138, 122, 106, 0.45); transform: translateY(-7px); }
+.c-pg { font-family: var(--mono); font-size: 14px; color: var(--muted); }
+.contents a:hover .c-name, .contents a:focus-visible .c-name { color: var(--accent-deep); }
+.contents a:hover .c-pg { color: var(--accent-deep); }
+
+/* page 2: bigger note cards */
+.book-mode .cards { gap: 28px; }
+.book-mode .card { padding: 30px 34px 28px; min-height: 270px; gap: 16px; }
+.book-mode .card-title { font-size: 46px; padding-bottom: 12px; }
+.book-mode .card-title::after { width: 44px; }
+.book-mode .card p { font-size: 17px; line-height: 1.75; }
+.book-mode .tags li { font-size: 11.5px; padding: 4px 12px; }
+
+/* page 3: the four notes as a 2 x 2 */
+.book-mode .notes { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.book-mode .note summary { padding: 16px 22px 16px 26px; }
+.book-mode .note-title { font-size: 31px; }
+.book-mode .note-preview { font-size: 21px; }
+.book-mode .note-tasks { padding: 0 22px 18px 26px; }
+.book-mode .note-tasks li { font-size: 25px; }
+.book-mode .notes-hint { font-size: 20px; margin-top: 18px; }
+
+/* page 4: results beside the stats card, streak map underneath */
+.book-mode .cp-top {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 30px;
+}
+.book-mode .cp-top .results { margin-bottom: 0; }
+.book-mode .cp-top .cf-card { margin-bottom: 0; }
+.book-mode .results li { font-size: 17px; padding-block: 7px; }
+
+/* page 5: the level journey in two columns */
+.book-mode .journey-cols { grid-template-columns: 1fr 1fr; gap: 0 48px; align-items: start; }
+.book-mode .journey { gap: 20px; }
+.book-mode .entries li { padding: 6px 0; }
+
+/* page 6: four big contact cards, 2 x 2, filling the sheet */
+.book-mode #contact .page-body { justify-content: flex-start; }
+.book-mode .contact {
+  flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 18px;
+}
+.book-mode .contact li { padding: 26px 34px; gap: 26px; }
+.book-mode .c-icon { width: 68px; height: 68px; border-radius: 18px; }
+.book-mode .c-icon svg { width: 32px; height: 32px; }
+.book-mode .c-text { gap: 6px; }
+.book-mode .contact .lk { font-size: 52px; }
+.book-mode .contact-sub { font-size: 13px; }
+.book-mode #contact .buddy img { height: 150px; }
+.book-mode #contact .bubble { margin-bottom: 92px; }
+
+/* page 2: the two project cards fill the sheet like big notes */
+.book-mode #projects .page-body { justify-content: flex-start; }
+.book-mode .cards { flex: 1; }
+.book-mode .card { padding: 38px 40px 34px; gap: 20px; }
+.book-mode .card-title { font-size: 58px; padding-bottom: 14px; }
+.book-mode .card-title::after { width: 54px; height: 2.5px; }
+.book-mode .card p { font-size: 19px; line-height: 1.8; }
+.book-mode .tags li { font-size: 12px; padding: 5px 14px; }
+
+/* page 3: four notes fill the sheet, each listing its skills like a BookView day card */
+.book-mode #skills .page-body { justify-content: flex-start; }
+.book-mode .notes { flex: 1; grid-template-rows: 1fr 1fr; align-items: stretch; }
+.book-mode .note summary { padding: 20px 26px 12px 30px; }
+.book-mode .note-title { font-size: 36px; }
+.book-mode .note-count { font-size: 12px; }
+.book-mode .note-preview { display: grid; gap: 4px; margin-top: 12px; white-space: normal; font-size: 24px; }
+.book-mode .note-preview span { display: flex; align-items: center; gap: 12px; }
+.book-mode .note-preview span::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--bar); opacity: 0.8; flex: none;
+}
+.book-mode .note-tasks { padding: 0 26px 18px 30px; }
+.book-mode .note-tasks li { font-size: 26px; padding: 4px 0; }
+.book-mode .tick { width: 21px; height: 21px; }
+.book-mode .notes-hint { margin-top: 14px; }
+
+/* page 5: tighter so both columns fit on the sheet */
+.book-mode #leadership .label { margin-bottom: 12px; }
+.book-mode #leadership .journey { gap: 16px; }
+.book-mode #leadership .level-title { font-size: 26px; margin-bottom: 8px; }
+.book-mode #leadership .entries { padding: 4px 16px; }
+.book-mode #leadership .entries li { padding: 5px 0; font-size: 14px; }
+
+/* page 1: bio and the contents index side by side */
+.book-mode #about .page-body {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 64px; align-content: center; align-items: start;
+}
+.book-mode #about .contents { margin-top: 0; }
+
+/* page 3: an open note is exactly as tall as the closed list, so nothing jumps */
+.book-mode .note-preview { line-height: 1.3; }
+.book-mode .note-tasks::before { margin: 6px 0 6px; }
+.book-mode .note-tasks li { font-size: 24px; line-height: 1.3; padding: 2px 0; }
+.book-mode .note-tasks li .tick { width: 20px; height: 20px; }
+
+/* compact page heads on laptop, so more of each sheet is content */
+.book-mode .page { padding-top: 34px; }
+.book-mode .title { font-size: 56px; }
+.book-mode .rule { margin: 12px 0 18px; }
+.book-mode #about .title-name { font-size: 86px; }
+
+/* page 1: larger bio and index so they fill the sheet */
+.book-mode #about .lede { font-size: 20px; line-height: 1.85; }
+.book-mode #about .c-name { font-size: 34px; }
+.book-mode #about .contents a { padding: 6px 0; }
+
+/* page 3: trim the open checklist to the closed list's height */
+.book-mode .note-tasks { padding-bottom: 0; }
+.book-mode .note-tasks li { padding: 1px 0; }
+
+/* page 5: the left column holds the longer lines, so give it more room */
+.book-mode .journey-cols { grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr); gap: 0 40px; }
+.book-mode #leadership .journey { gap: 12px; }
+.book-mode #leadership .level-title { margin-bottom: 6px; }
+
+/* short laptop screens: thinner margins above and below the notebook */
+@media (max-height: 760px) {
+  .book-mode .book { margin-top: 18px; height: calc(100dvh - var(--topbar-h, 57px) - 34px); }
+}
+
+/* contact icons: a soft terracotta tile, like Meno's outline tab icons */
+.c-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.c-icon {
+  flex: none; display: grid; place-items: center;
+  width: 46px; height: 46px; border-radius: 13px;
+  color: var(--accent);
+  background: rgba(196, 105, 79, 0.08);
+  border: 1.5px solid rgba(196, 105, 79, 0.35);
+  transition: background-color .18s ease, color .18s ease;
+}
+.c-icon svg { width: 22px; height: 22px; display: block; }
+/* not linked yet (CV): grey tile */
+.contact li:not(:has(a)) .c-icon { color: var(--muted); background: rgba(42, 36, 24, 0.04); border-color: rgba(42, 36, 24, 0.14); }
+/* the whole card is the link */
+.contact a.lk::before { content: ""; position: absolute; inset: 0; border-radius: 14px; }
+.contact li:has(a.lk:hover), .contact li:has(a.lk:focus-visible) {
+  border-color: rgba(196, 105, 79, 0.55); transform: translateY(-2px);
+  box-shadow: 0 10px 22px -12px rgba(60, 40, 20, 0.35);
+}
+.contact li:has(a.lk:hover) .c-icon, .contact li:has(a.lk:focus-visible) .c-icon { background: var(--accent); color: #fff; border-color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .contact li { transition: none; } .contact li:has(a.lk:hover) { transform: none; } }
+
+/* very narrow phones: smaller icon so addresses stay on one line */
+@media (max-width: 380px) {
+  .contact li { gap: 12px; padding: 12px 14px; }
+  .c-icon { width: 36px; height: 36px; border-radius: 11px; }
+  .c-icon svg { width: 19px; height: 19px; }
+  .contact-sub { font-size: 10.5px; letter-spacing: 0; }
+}
