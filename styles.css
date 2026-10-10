@@ -716,3 +716,12 @@ a.lk:hover::after { opacity: 1; }
   .c-icon svg { width: 19px; height: 19px; }
   .contact-sub { font-size: 10.5px; letter-spacing: 0; }
 }
+
+/* Qimam Fellowship: gold, deep enough to read on cream paper, with a soft shine */
+.gold {
+  font-weight: 700;
+  color: #9A7310;
+  background: linear-gradient(100deg, #8A6508 0%, #B8860B 35%, #D4A62A 50%, #B8860B 65%, #8A6508 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
