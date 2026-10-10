@@ -25,6 +25,12 @@ Replace a `[...]` placeholder with the real URL. Anything still in `[brackets]` 
 
 All the words on the page are in `index.html`, one `<section>` per notebook page (`#about`, `#projects`, `#skills`, `#cp`, `#leadership`, `#contact`).
 
+## After changing styles.css or main.js: bump the version
+
+In `index.html`, find `styles.css?v=3` and `main.js?v=3` and raise the number (`v=4`, `v=5`, …).
+This makes every visitor's browser load the new file right away instead of a copy it saved earlier
+(GitHub lets browsers keep old copies for 10 minutes).
+
 ## Publish your change
 
 In Terminal, inside this folder:
